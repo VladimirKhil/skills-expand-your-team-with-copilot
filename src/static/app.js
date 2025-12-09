@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Configuration constants
+  const TWITTER_DESCRIPTION_MAX_LENGTH = 200; // Leave room for activity name and URL
+
   // DOM elements
   const activitiesList = document.getElementById("activities-list");
   const messageDiv = document.getElementById("message");
@@ -617,9 +620,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const shareFacebookButton = activityCard.querySelector(".share-facebook");
     const shareEmailButton = activityCard.querySelector(".share-email");
 
-    shareTwitterButton.addEventListener("click", () => shareOnTwitter(name, details));
-    shareFacebookButton.addEventListener("click", () => shareOnFacebook(name, details));
-    shareEmailButton.addEventListener("click", () => shareViaEmail(name, details));
+    if (shareTwitterButton) {
+      shareTwitterButton.addEventListener("click", () => shareOnTwitter(name, details));
+    }
+    if (shareFacebookButton) {
+      shareFacebookButton.addEventListener("click", () => shareOnFacebook(name, details));
+    }
+    if (shareEmailButton) {
+      shareEmailButton.addEventListener("click", () => shareViaEmail(name, details));
+    }
 
     activitiesList.appendChild(activityCard);
   }
@@ -893,9 +902,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function shareOnTwitter(activityName, details) {
     const url = window.location.href;
     // Truncate description to fit Twitter's character limit (280 chars)
-    const maxDescLength = 200; // Leave room for the activity name and URL
-    const truncatedDesc = details.description.length > maxDescLength 
-      ? details.description.substring(0, maxDescLength) + '...' 
+    const truncatedDesc = details.description.length > TWITTER_DESCRIPTION_MAX_LENGTH 
+      ? details.description.substring(0, TWITTER_DESCRIPTION_MAX_LENGTH) + '...' 
       : details.description;
     const text = `Check out ${activityName} at Mergington High School! ${truncatedDesc}`;
     const twitterUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
