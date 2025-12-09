@@ -363,6 +363,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return "academic";
   }
 
+  // Helper function to escape HTML to prevent XSS
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
   // Function to fetch activities from API with optional day and time filters
   async function fetchActivities() {
     // Show loading skeletons first
@@ -520,16 +527,17 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     // Create social sharing buttons
+    const escapedName = escapeHtml(name);
     const shareButtons = `
       <div class="social-share-container">
         <span class="share-label">Share:</span>
-        <button class="share-button share-twitter" data-activity="${name}" title="Share on X (Twitter)" aria-label="Share ${name} on X (Twitter)">
+        <button class="share-button share-twitter" data-activity="${escapedName}" title="Share on X (Twitter)" aria-label="Share ${escapedName} on X (Twitter)">
           🐦
         </button>
-        <button class="share-button share-facebook" data-activity="${name}" title="Share on Facebook" aria-label="Share ${name} on Facebook">
+        <button class="share-button share-facebook" data-activity="${escapedName}" title="Share on Facebook" aria-label="Share ${escapedName} on Facebook">
           📘
         </button>
-        <button class="share-button share-email" data-activity="${name}" title="Share via Email" aria-label="Share ${name} via Email">
+        <button class="share-button share-email" data-activity="${escapedName}" title="Share via Email" aria-label="Share ${escapedName} via Email">
           ✉️
         </button>
       </div>
@@ -884,7 +892,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // Social sharing functions
   function shareOnTwitter(activityName, details) {
     const url = window.location.href;
-    const text = `Check out ${activityName} at Mergington High School! ${details.description}`;
+    // Truncate description to fit Twitter's character limit (280 chars)
+    const maxDescLength = 200; // Leave room for the activity name and URL
+    const truncatedDesc = details.description.length > maxDescLength 
+      ? details.description.substring(0, maxDescLength) + '...' 
+      : details.description;
+    const text = `Check out ${activityName} at Mergington High School! ${truncatedDesc}`;
     const twitterUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
     window.open(twitterUrl, '_blank', 'width=550,height=420');
   }
