@@ -519,6 +519,22 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
+    // Create social sharing buttons
+    const shareButtons = `
+      <div class="social-share-container">
+        <span class="share-label">Share:</span>
+        <button class="share-button share-twitter" data-activity="${name}" title="Share on Twitter">
+          🐦
+        </button>
+        <button class="share-button share-facebook" data-activity="${name}" title="Share on Facebook">
+          📘
+        </button>
+        <button class="share-button share-email" data-activity="${name}" title="Share via Email">
+          ✉️
+        </button>
+      </div>
+    `;
+
     activityCard.innerHTML = `
       ${tagHtml}
       <h4>${name}</h4>
@@ -528,6 +544,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <span class="tooltip-text">Regular meetings at this time throughout the semester</span>
       </p>
       ${capacityIndicator}
+      ${shareButtons}
       <div class="participants-list">
         <h5>Current Participants:</h5>
         <ul>
@@ -586,6 +603,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     }
+
+    // Add click handlers for share buttons
+    const shareTwitterButton = activityCard.querySelector(".share-twitter");
+    const shareFacebookButton = activityCard.querySelector(".share-facebook");
+    const shareEmailButton = activityCard.querySelector(".share-email");
+
+    shareTwitterButton.addEventListener("click", () => shareOnTwitter(name, details));
+    shareFacebookButton.addEventListener("click", () => shareOnFacebook(name, details));
+    shareEmailButton.addEventListener("click", () => shareViaEmail(name, details));
 
     activitiesList.appendChild(activityCard);
   }
@@ -854,6 +880,28 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error signing up:", error);
     }
   });
+
+  // Social sharing functions
+  function shareOnTwitter(activityName, details) {
+    const url = window.location.href;
+    const text = `Check out ${activityName} at Mergington High School! ${details.description}`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+    window.open(twitterUrl, '_blank', 'width=550,height=420');
+  }
+
+  function shareOnFacebook(activityName, details) {
+    const url = window.location.href;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+    window.open(facebookUrl, '_blank', 'width=550,height=420');
+  }
+
+  function shareViaEmail(activityName, details) {
+    const formattedSchedule = formatSchedule(details);
+    const subject = `Join ${activityName} at Mergington High School!`;
+    const body = `Hi!\n\nI wanted to share this exciting activity with you:\n\n${activityName}\n${details.description}\n\nSchedule: ${formattedSchedule}\n\nCheck it out at: ${window.location.href}`;
+    const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
+  }
 
   // Expose filter functions to window for future UI control
   window.activityFilters = {
