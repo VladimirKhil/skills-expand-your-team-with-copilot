@@ -54,6 +54,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Update dark mode button appearance
     function updateDarkModeButton(isDarkMode) {
+      if (!themeIcon || !themeText) return;
+      
       if (isDarkMode) {
         themeIcon.textContent = "☀️";
         themeText.textContent = "Light Mode";
