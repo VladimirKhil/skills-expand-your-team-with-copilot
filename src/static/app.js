@@ -523,13 +523,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const shareButtons = `
       <div class="social-share-container">
         <span class="share-label">Share:</span>
-        <button class="share-button share-twitter" data-activity="${name}" title="Share on Twitter">
+        <button class="share-button share-twitter" data-activity="${name}" title="Share on Twitter" aria-label="Share ${name} on Twitter">
           🐦
         </button>
-        <button class="share-button share-facebook" data-activity="${name}" title="Share on Facebook">
+        <button class="share-button share-facebook" data-activity="${name}" title="Share on Facebook" aria-label="Share ${name} on Facebook">
           📘
         </button>
-        <button class="share-button share-email" data-activity="${name}" title="Share via Email">
+        <button class="share-button share-email" data-activity="${name}" title="Share via Email" aria-label="Share ${name} via Email">
           ✉️
         </button>
       </div>
@@ -885,7 +885,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function shareOnTwitter(activityName, details) {
     const url = window.location.href;
     const text = `Check out ${activityName} at Mergington High School! ${details.description}`;
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+    const twitterUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
     window.open(twitterUrl, '_blank', 'width=550,height=420');
   }
 
