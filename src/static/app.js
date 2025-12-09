@@ -901,19 +901,22 @@ document.addEventListener("DOMContentLoaded", () => {
   // Social sharing functions
   function shareOnTwitter(activityName, details) {
     const url = window.location.href;
-    // Truncate description to fit Twitter's character limit (280 chars)
-    const truncatedDesc = details.description.length > TWITTER_DESCRIPTION_MAX_LENGTH 
-      ? details.description.substring(0, TWITTER_DESCRIPTION_MAX_LENGTH) + '...' 
+    // Calculate total character budget for Twitter (280 chars)
+    // Reserve space for: "Check out ", " at Mergington High School! ", URL (23 chars), and buffer
+    const staticText = `Check out ${activityName} at Mergington High School! `;
+    const availableChars = 280 - staticText.length - 25; // 25 chars reserved for URL
+    const truncatedDesc = details.description.length > availableChars 
+      ? details.description.substring(0, availableChars - 3) + '...' 
       : details.description;
-    const text = `Check out ${activityName} at Mergington High School! ${truncatedDesc}`;
+    const text = `${staticText}${truncatedDesc}`;
     const twitterUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
-    window.open(twitterUrl, '_blank', 'width=550,height=420');
+    window.open(twitterUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
   }
 
   function shareOnFacebook(activityName, details) {
     const url = window.location.href;
     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-    window.open(facebookUrl, '_blank', 'width=550,height=420');
+    window.open(facebookUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
   }
 
   function shareViaEmail(activityName, details) {
